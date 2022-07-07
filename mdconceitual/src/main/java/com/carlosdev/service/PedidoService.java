@@ -12,6 +12,7 @@ import com.carlosdev.domain.PagamentoComBoleto;
 import com.carlosdev.domain.Pedido;
 import com.carlosdev.domain.Produto;
 import com.carlosdev.domain.enums.EstadoPagamento;
+import com.carlosdev.repository.ClienteRepository;
 import com.carlosdev.repository.ItemPedidoRepository;
 import com.carlosdev.repository.PagamentoRepository;
 import com.carlosdev.repository.PedidoRepository;
@@ -38,6 +39,17 @@ public class PedidoService {
 	
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	
+	@Autowired
+	private ClienteService clienteService;
+	
+	
+	
+	
 	public Pedido busca(Integer id) {
 		
 		Optional<Pedido> objCat = pedidoRepo.findById(id);
@@ -50,6 +62,7 @@ public class PedidoService {
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(new Date());
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstadoPagamento(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		
@@ -58,21 +71,24 @@ public class PedidoService {
 			 boletoService.preencherPagamentoComBoleto(pagto, obj.getInstante());
 		}
 			obj = pedidoRepo.save(obj);
-			 pagamentoRepository.save(obj.getPagamento());
+			pagamentoRepository.save(obj.getPagamento());
+			for (ItemPedido ip : obj.getItens()) {
+				ip.setDesconto(0.0);
+				ip.setProduto(produtoService.find(ip.getProduto().getId()));
+				ip.setPreco(ip.getProduto().getPreco());
+				ip.setPedido(obj);
+			}
+			itemPedidoRepository.saveAll(obj.getItens());
+			System.out.println(obj);
+			return obj;
+		}
+			 
 			 
 			
-			 for (ItemPedido ip : obj.getItens()) {
-					ip.setDesconto(0.0);
-					ip.setProduto(produtoService.find(ip.getProduto().getId()));
-					ip.setPreco(ip.getProduto().getPreco());
-					ip.setPedido(obj);
-				}
-			 itemPedidoRepository.saveAll(obj.getItens());
-			 return obj;
 
 			 }
 		
 		
-	}
+	
 
 

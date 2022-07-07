@@ -3,9 +3,15 @@ package com.carlosdev;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.carlosdev.domain.Pedido;
+import com.carlosdev.service.PedidoService;
+import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
+import com.fasterxml.jackson.datatype.jdk8.WrappedIOException;
 
 
 
@@ -16,15 +22,21 @@ public class MdconceitualApplication implements CommandLineRunner {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(MdconceitualApplication.class, args);
+		
+		
+		
+		
+			
 	}
 
+	
+	
+	
 	@Override
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 		
 		
-		
-			
 		
 	}
 
