@@ -48,6 +48,11 @@ public class PedidoService {
 	private ClienteService clienteService;
 	
 	
+	// INJETANDO SERVIÇO DE EMAILL
+	@Autowired
+	private EmailService emailService;
+	
+	
 	
 	
 	public Pedido busca(Integer id) {
@@ -79,7 +84,9 @@ public class PedidoService {
 				ip.setPedido(obj);
 			}
 			itemPedidoRepository.saveAll(obj.getItens());
-			System.out.println(obj);
+			
+			// APOS SALVO O PEDIDO SERÃ ENVIADO A MESSAGEM DE CONFIRMAÇÃO E EMAIL
+			emailService.sendOrderConfirmationEmail(obj);
 			return obj;
 		}
 			 
